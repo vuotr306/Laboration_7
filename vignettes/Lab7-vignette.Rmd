@@ -1,0 +1,75 @@
+---
+title: "Lab7-Vignette"
+author: "Oscar Petterson and Vuong Tran"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lab7-Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+This package provides our version of `linreg`, a function that performs linear regression selected variables in a data set.
+This is a test package made for educational purposes.
+
+## Usage
+
+The `linreg` functions contains the methods `print`, `plot`, `residuals`, `predict`, `coef`, and `summary`. Below we will demonstrate our examples using the `iris` data set, fitting a linear regression using `linreg` function and analysing the model using its methods.
+
+```{r}
+library(Lab7)
+my_linreg <- linreg(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
+```
+Now, `my_linreg` is an object of class `linreg` and it can use its methods.
+
+### print
+
+```{r}
+print(my_linreg)
+```
+The output is, on purpose, very similar to that of the `lm` function.
+
+### plot
+
+```{r}
+plot(my_linreg)
+```
+
+In the first plot, the residuals are plotted against the fitted values. The gray line indicates the mean of the residuals, while the red is the regression line for the residuals regressed on the fitted values.
+
+### residuals
+
+```{r}
+head(residuals(my_linreg), 10)
+```
+
+The `residuals` function provides the residuals of the fitted regression object. `resid` can also be used. 
+
+### predict
+
+```{r}
+head(predict(my_linreg), 10)
+```
+
+The `predict` function provides the fitted values of the regression object.
+
+### coef
+
+```{r}
+coef(my_linreg)
+```
+
+The `coef` functions provides the estimated beta-coefficients of the regression model. They were estimated using QR-decomposition. `coefficients` can also be used.
+
+### summary
+
+```{r}
+summary(my_linreg)
+```
+
+Using `summary`, we get a brief summary of some of the most common information needed for a linear regression model.
+
+
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
