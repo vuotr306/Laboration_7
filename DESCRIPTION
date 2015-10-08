@@ -9,7 +9,7 @@ Author: c(
 Maintainer: Complain to <vuotr306@student.liu.se>
 Description: Contains a function linreg that performs a multiple linear regression using QR-decomposition and methods that use the linreg-class that the objects returned from linreg() are of.
 License: CC0
-Imports: ggplot2 (>= 1.0.0)
+Imports: ggplot2 (>= 1.0.0), nycflights13, dplyr, mlbench, caret
 Depends: R (>= 3.0.0)
 Suggests: testthat,
     knitr
