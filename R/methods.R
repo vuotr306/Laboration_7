@@ -1,6 +1,4 @@
 
-
-
 # Our inherited functions, from coef, residuals and predict
 
 print.linreg <- function(x){

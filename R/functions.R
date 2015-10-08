@@ -44,6 +44,7 @@ ridgereg <- function(formula, data, lambda = 0){
   stopifnot(!is.null(data))
   stopifnot(is.data.frame(data))
   stopifnot(sum(1-c(all.vars(formula)) %in% colnames(data)) == 0)
+  stopifnot(is.numeric(lambda))
 # Kontrollera att lambda uppfyller ngt villkor.
   X<-model.matrix(formula, data=data)
   X <- cbind(1, scale(X[,-1]))

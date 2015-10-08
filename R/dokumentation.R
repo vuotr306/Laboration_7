@@ -184,3 +184,17 @@ NULL
 "predict.ridgereg"
 
 
+
+
+#' Airport delays
+#'
+#' A visualisation of flight delays in 105 airports in the U.S.A.
+#'
+#' Uses information from 336,776 flights from three airports.
+#' 
+#' @examples
+#' visualize_airport_delays()
+#' @return A plot displaying the average delay for flights in 105 airports.
+#' @export
+"visualize_airport_delays"
+

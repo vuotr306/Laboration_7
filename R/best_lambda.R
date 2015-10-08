@@ -1,20 +1,18 @@
-library(mlbench)
-library(caret)
-library(gbm)
+
 
 data("iris")
 
-inTraining <- createDataPartition(iris$Petal.Length, p = .75, list = FALSE)
+inTraining <- caret::createDataPartition(iris$Petal.Length, p = .75, list = FALSE)
 training <- iris[ inTraining,]
 testing  <- iris[-inTraining,]
-fitControl <- trainControl(## 10-fold CV
+fitControl <- caret::trainControl(## 10-fold CV
   method = "repeatedcv",
   number = 10,
   ## repeated ten times
   repeats = 10)
 
 
-gbmFit1 <- train(Petal.Length ~ ., data = training,
+gbmFit1 <- caret::train(Petal.Length ~ ., data = training,
                  method = "gbm",
                  trControl = fitControl,
                  ## This last option is actually one
@@ -29,7 +27,7 @@ gbmGrid <-  expand.grid(interaction.depth = c(1,3),
 nrow(gbmGrid)
 
 set.seed(825)
-gbmFit2 <- train(Petal.Length ~ ., data = training,
+gbmFit2 <- caret::train(Petal.Length ~ ., data = training,
                  method = "gbm",
                  trControl = fitControl,
                  verbose = FALSE,
