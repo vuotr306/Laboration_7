@@ -39,9 +39,7 @@ linreg<-function(formula, data){
 }
 
 
-
-
-ridgereg <- function(formula, data, lambda){
+ridgereg <- function(formula, data, lambda = 0){
 
   stopifnot(!is.null(data))
   stopifnot(is.data.frame(data))
@@ -53,23 +51,26 @@ ridgereg <- function(formula, data, lambda){
   p <- ncol(X)
 
   B_ridge_hat <- solve(t(X) %*% X + lambda * diag(p) ) %*% t(X) %*% as.matrix(y)
-  Y_hat <- X%*%B_ridge_hat
+  dimnames(B_ridge_hat) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
+  Y_hat <- X %*% B_ridge_hat
+  res <- as.matrix(y - Y_hat, ncol = 1)
+  n<-nrow(X)
+  p<-ncol(X)
 
-  ridgereg_list <- list(B_ridge_hat = B_ridge_hat, Y_hat = Y_hat)
-
+  ridgereg_list <- list(formula = formula, data=data, X=X, y=y, B_ridge_hat = B_ridge_hat, y_hat = Y_hat, res = res, n=n, p=p)
   ridgereg_object <- structure(ridgereg_list, class="ridgereg")
-
 
   return(ridgereg_object)
 
 
 }
 
-ridgereg(Petal.Length~Petal.Width, iris, 10)
 
 
-lm(Petal.Length~Petal.Width, iris, )
-plot(Petal.Length~Petal.Width, iris)
+# x <- Lab7::ridgereg(Petal.Length~Petal.Width+Sepal.Length, data=iris)
+# ridgereg(Petal.Length~Petal.Width, iris)#, 10)
 
-abline(a=3.745, b=1.69)
-abline(a=1.69, b=3.75)
+
+# lm(Petal.Length~Petal.Width, iris )
+# plot(Petal.Length~Petal.Width, iris)
+
