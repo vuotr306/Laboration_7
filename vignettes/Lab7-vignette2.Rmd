@@ -9,13 +9,17 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
+
+## 1
+
 ```{r}
 library(caret)
 library(mlbench)
 library(Lab7)
 data("BostonHousing")
 ```
-We have data about .....
+
+We have data about 506 properties in Boston from 1970. 14 variables are included. We want to predict the crime rate (per capita), using the other 13 variables.
 
 ```{r}
 head(BostonHousing)
@@ -33,37 +37,119 @@ fitControl <- caret::trainControl(## 10-fold CV
   number = 10,
   ## repeated ten times
   repeats = 10)
-
 ```
-blablabla
+
+## 2
+We use the caret package and its train function to fit a linear regression model on the training set:
+
 ```{r}
 lmFit <- caret::train(crim ~ ., data = training,
-                 method = "lm",
-                 trControl = fitControl
-
-                 )
+                      method = "lm",
+                      trControl = fitControl
+)
 lmFit
 
 
 ```
 
-blablabla
+Now, we try finding a linear regression model using forward selection, on the same training data as before:
+  
 ```{r}
 lmGrid <-  expand.grid(nvmax=1:(ncol(training)-1))
 fsFit <- caret::train(crim ~ ., data = training,
-                 method = "leapForward",
-                 trControl = fitControl,
-                  tuneGrid=lmGrid
-                 )
+                      method = "leapForward",
+                      trControl = fitControl,
+                      tuneGrid=lmGrid
+)
 
 fsFit
 ```
-Evaluate the performance..........
+
+## 3
+Evaluate lm and lm+forwsel...
 
 
 
 
+## 4
+
+We try the caret train function with our function ridgereg as methods with lambda, variating from 0 to 100 and noticed the best values was when lambda was equal to 16.36.
+The differences can be seen down here:
+  
+  
+```{r}
+
+lmRig<-list(type=c("Regression","Classification"),
+            library="Lab7",
+            loop=NULL)
+
+lmRig$parameters<-data.frame(parameter="lambda",
+                             class="numeric",
+                             label="Lambda")
+
+# 
+# Fit<-function(formula,data,lambda,param,lev,last,classProbs,...){
+# 
+#   
+#   Lab7::ridgereg( formula=formula,data=data,lambda=param$lambda)
+# }
 
 
-> "He who gives up [code] safety for [code] speed deserves neither."
+Fit<-function(x,y,lambda,param,lev,last,classProbs,...){
+  
+  dat <- as.data.frame(x)
+  dat$response <- y
+  
+  formula <- "response ~ "
+  
+  formula <- paste(formula, names(dat)[1], sep="")
+  
+  if(ncol(x) > 1){
+    for(i in 2:ncol(x)){
+      
+      formula <- paste(formula, " + ", names(dat)[i], sep="")
+      
+    }
+  }
+  
+  formula <- as.formula(formula)
+  Lab7::ridgereg( formula = formula, data=dat,lambda=param$lambda)
+}
+
+lmRig$fit<-Fit
+
+lmRig$predict<-function (modelFit, newdata,preProc=NULL, submodels = NULL) 
+{
+  predict(modelFit, newdata)
+}
+
+lmRig$prob<- list(NULL)
+
+lmRig$sort<-function (x) x[order(-x$lambda), ]
+
+lmRig$label<-"Ridgeregression"
+
+lmRig$grid<-function(formula,data,len=NULL){
+  # data.frame(lambda=seq(16,16.5,0.01))
+  # data.frame(lambda=seq(10,20,2))
+  data.frame(lambda=c(0, 1, 5, 16.36, 20, 50, 100))
+}
+
+
+BostonHousing$chas <- as.numeric(BostonHousing$chas)-1
+
+
+
+rrFit1 <- caret::train(crim ~ ., data = training,
+                       method = lmRig,
+                       trControl = fitControl
+                       
+)
+rrFit1
+```
+
+When our tuning parameter lambda is zero, ridge regression is equal to OLS and as we can see, the Root Mean Squared Error is much lower for the best tuning value.
+
+
+> "Insert quote here."
 ([via](https://twitter.com/hadleywickham/status/504368538874703872))

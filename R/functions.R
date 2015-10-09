@@ -52,13 +52,16 @@ ridgereg <- function(formula, data, lambda = 0){
   p <- ncol(X)
 
   B_ridge_hat <- solve(t(X) %*% X + lambda * diag(p) ) %*% t(X) %*% as.matrix(y)
+  
+  
+  
   dimnames(B_ridge_hat) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
   Y_hat <- X %*% B_ridge_hat
   res <- as.matrix(y - Y_hat, ncol = 1)
   n<-nrow(X)
   p<-ncol(X)
 
-  ridgereg_list <- list(formula = formula, data=data, X=X, y=y, B_ridge_hat = B_ridge_hat, y_hat = Y_hat, res = res, n=n, p=p)
+  ridgereg_list <- list(formula = formula, data=data, X=X, y=y, B_ridge_hat = B_ridge_hat,B_QR=B_QR, y_hat = Y_hat, res = res, n=n, p=p)
   ridgereg_object <- structure(ridgereg_list, class="ridgereg")
 
   return(ridgereg_object)
