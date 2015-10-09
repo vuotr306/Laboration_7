@@ -139,7 +139,7 @@ predict.ridgereg <- function(x, x_values = "default"){
   }else{
     # predict new
     stopifnot(is.data.frame(x_values) | is.matrix(x_values))
-    stopifnot(nrow(x_values) == x$n)
+    # stopifnot(nrow(x_values) == x$n)
     stopifnot(ncol(x_values) == x$p - 1)
     X <- as.matrix(cbind(1, x_values))
     y_hat <- X %*% x$B_ridge_hat

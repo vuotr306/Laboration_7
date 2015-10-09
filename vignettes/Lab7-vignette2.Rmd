@@ -1,0 +1,69 @@
+---
+title: "Lab7-Vignette2"
+author: "Oscar Petterson and Vuong Tran"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lab7-Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r}
+library(caret)
+library(mlbench)
+library(Lab7)
+data("BostonHousing")
+```
+We have data about .....
+
+```{r}
+head(BostonHousing)
+```
+
+We divide the dataset into 70 % training and 30 % test data.
+
+```{r}
+set.seed(1337)
+inTraining <- caret::createDataPartition(BostonHousing$crim, p = .7, list = FALSE)
+training <- BostonHousing[ inTraining,]
+testing  <- BostonHousing[-inTraining,]
+fitControl <- caret::trainControl(## 10-fold CV
+  method = "repeatedcv",
+  number = 10,
+  ## repeated ten times
+  repeats = 10)
+
+```
+blablabla
+```{r}
+lmFit <- caret::train(crim ~ ., data = training,
+                 method = "lm",
+                 trControl = fitControl
+
+                 )
+lmFit
+
+
+```
+
+blablabla
+```{r}
+lmGrid <-  expand.grid(nvmax=1:(ncol(training)-1))
+fsFit <- caret::train(crim ~ ., data = training,
+                 method = "leapForward",
+                 trControl = fitControl,
+                  tuneGrid=lmGrid
+                 )
+
+fsFit
+```
+Evaluate the performance..........
+
+
+
+
+
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
