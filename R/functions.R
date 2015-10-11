@@ -52,10 +52,13 @@ ridgereg <- function(formula, data, lambda = 0){
   p <- ncol(X)
 
   B_ridge_hat <- solve(t(X) %*% X + lambda * diag(p) ) %*% t(X) %*% as.matrix(y)
-  
-  
+  QR <- qr((X))
+  Q <- qr.Q(QR)
+  R<- qr.R(QR)
+  B_QR<- qr.solve(R+ lambda * diag(p) ) %*% t(Q) %*% as.matrix(y)
   
   dimnames(B_ridge_hat) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
+  dimnames(B_QR) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
   Y_hat <- X %*% B_ridge_hat
   res <- as.matrix(y - Y_hat, ncol = 1)
   n<-nrow(X)
@@ -68,6 +71,7 @@ ridgereg <- function(formula, data, lambda = 0){
 
 
 }
+
 
 
 
