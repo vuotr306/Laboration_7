@@ -47,7 +47,7 @@ ridgereg <- function(formula, data, lambda = 0){
   stopifnot(is.numeric(lambda))
 # Kontrollera att lambda uppfyller ngt villkor.
   X<-model.matrix(formula, data=data)
-  X <- cbind(1, scale(X[,-1]))
+  # X <- cbind(1, scale(X[,-1]))
   y<-as.matrix(data[all.vars(formula)[1]],ncol=1)
   p <- ncol(X)
 #   B_ridge_hat <- solve(t(X) %*% X + lambda * diag(p) ) %*% t(X) %*% as.matrix(y)

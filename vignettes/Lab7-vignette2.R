@@ -19,6 +19,11 @@ fitControl <- caret::trainControl(## 10-fold CV
   repeats = 10)
 
 ## ------------------------------------------------------------------------
+BostonHousing$chas <- as.numeric(BostonHousing$chas) - 1
+BostonHousing <- scale(BostonHousing)
+
+## ------------------------------------------------------------------------
+set.seed(1337)
 lmFit <- caret::train(crim ~ ., data = training,
                       method = "lm",
                       trControl = fitControl
@@ -29,6 +34,7 @@ lmFit
 
 ## ------------------------------------------------------------------------
 lmGrid <-  expand.grid(nvmax=1:(ncol(training)-1))
+set.seed(1337)
 fsFit <- caret::train(crim ~ ., data = training,
                       method = "leapForward",
                       trControl = fitControl,
@@ -89,20 +95,26 @@ lmRig$sort<-function (x) x[order(-x$lambda), ]
 
 lmRig$label<-"Ridgeregression"
 
-lmRig$grid<-function(formula,data,len=NULL){
-  # data.frame(lambda=seq(16,16.5,0.01))
-  # data.frame(lambda=seq(10,20,2))
-  data.frame(lambda=c(0, 1, 5, 16.36, 20, 50, 100))
+lmRig$grid<-function(x,y,len=NULL, search="grid"){
+  # data.frame(lambda=seq(from=0, to=500, by=10))
+  # data.frame(lambda=seq(from=500, to=1000, by=25))
+  # data.frame(lambda=seq(from=750, to=850, by=10))
+  # data.frame(lambda=seq(from=820, to=840, by=1))
+  # data.frame(lambda=seq(from=825, to=830, by=0.1))
+  data.frame(lambda=c(0, 1, 2, 500, 828, 828.4, 830, 1000))
 }
 
-
-BostonHousing$chas <- as.numeric(BostonHousing$chas)-1
-
-
-
+set.seed(1337)
 rrFit1 <- caret::train(crim ~ ., data = training,
                        method = lmRig,
                        trControl = fitControl
 )
 rrFit1
+
+## ------------------------------------------------------------------------
+best_model <- ridgereg(crim ~ zn + indus + chas + nox + rm + age + dis + rad + tax + ptratio + b + lstat + medv, data = as.data.frame(BostonHousing), lambda = 828.4)
+print(best_model)
+qqnorm(best_model$res)
+qqline(best_model$res)
+plot(best_model$res, type="o", pch=20, cex=0.5)
 

@@ -61,10 +61,7 @@ test_that("function rejects errounous input.", {
 
 
 testobject1 <- ridgereg(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
-SL <- scale(iris$Sepal.Length)
-SW <- scale(iris$Sepal.Width)
-PL <- iris$Petal.Length
-controlobject1 <- lm(PL~SW + SL)
+controlobject1 <- lm(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
 
 test_that("function returns correct results from specific data.", {
   expect_is(testobject1, class = "ridgereg")

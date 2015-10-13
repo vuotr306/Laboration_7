@@ -39,10 +39,19 @@ fitControl <- caret::trainControl(## 10-fold CV
   repeats = 10)
 ```
 
+However, for future analysis, we will standardize all predictors. The factor variable chas contains only two classes, so  no dummies are needed and we may convert it into a usual numeric variable.
+
+```{r}
+BostonHousing$chas <- as.numeric(BostonHousing$chas) - 1
+BostonHousing <- scale(BostonHousing)
+```
+
+
 ## 2
 We use the caret package and its train function to fit a linear regression model on the training set:
 
 ```{r}
+set.seed(1337)
 lmFit <- caret::train(crim ~ ., data = training,
                       method = "lm",
                       trControl = fitControl
@@ -56,6 +65,7 @@ Now, we try finding a linear regression model using forward selection, on the sa
   
 ```{r}
 lmGrid <-  expand.grid(nvmax=1:(ncol(training)-1))
+set.seed(1337)
 fsFit <- caret::train(crim ~ ., data = training,
                       method = "leapForward",
                       trControl = fitControl,
@@ -66,11 +76,11 @@ fsFit
 ```
 
 ## 3
-When comparing our two different methods lm and leapFoward, the result show that using only seven predictor is better than using all 13 of them with respect to the RMSE value. We can't compare the Rsquared values since lm and leapFowards methods give us two different best models with different amount of predictors.
+When comparing our two different methods lm and leapFoward, the result show that using only seven predictor is not better than using all 13 of them with respect to the RMSE value. We can't compare the Rsquared values since lm and leapFowards methods give us two different best models with different amount of predictors.
 
 ## 4-5
 
-We try the caret train function with our function ridgereg as methods with lambda, variating from 0 to 100 and see that the best values are when lambda is around 14-18. We made a new run, with focus on these values and noticed that the best values was when lambda was equal to 16.36.
+We try the caret train function with our function ridgereg as methods with lambda, variating from 0 to 500 and see that the best values are when lambda is 500. This makes us try higher values. We do several new runs, and eventually noticed that the best values was when lambda was equal to 828.4.
 The differences can be seen down here:
   
 ```{r}
@@ -125,17 +135,16 @@ lmRig$sort<-function (x) x[order(-x$lambda), ]
 
 lmRig$label<-"Ridgeregression"
 
-lmRig$grid<-function(formula,data,len=NULL){
-  # data.frame(lambda=seq(16,16.5,0.01))
-  # data.frame(lambda=seq(10,20,2))
-  data.frame(lambda=c(0, 1, 5, 16.36, 20, 50, 100))
+lmRig$grid<-function(x,y,len=NULL, search="grid"){
+  # data.frame(lambda=seq(from=0, to=500, by=10))
+  # data.frame(lambda=seq(from=500, to=1000, by=25))
+  # data.frame(lambda=seq(from=750, to=850, by=10))
+  # data.frame(lambda=seq(from=820, to=840, by=1))
+  # data.frame(lambda=seq(from=825, to=830, by=0.1))
+  data.frame(lambda=c(0, 1, 2, 500, 828, 828.4, 830, 1000))
 }
 
-
-BostonHousing$chas <- as.numeric(BostonHousing$chas)-1
-
-
-
+set.seed(1337)
 rrFit1 <- caret::train(crim ~ ., data = training,
                        method = lmRig,
                        trControl = fitControl
@@ -144,6 +153,16 @@ rrFit1
 ```
 
 ## 6
-When our tuning parameter lambda is zero, ridge regression is equal to OLS and as we can see, the Root Mean Squared Error is much lower for the best tuning value.
-We can't compare the RMSE between the ridge regression and the forward selection methods. Since regular lm and leapForward methods produced almost the same RMSE value our conclusion is that our Rigdgereg with best tuning paramether (lambda = 16.36) is also better than the best model from the leapForward method (linear regression with seven explanatory variables).
+When our tuning parameter lambda is zero, ridge regression is equal to OLS and as we can see, the Root Mean Squared Error is much lower for the best tuning value. Our Rigdgereg with best tuning paramether (lambda = 828.4) is also better than the best model from the leapForward method (linear regression with seven explanatory variables).
 
+We try the best value (lambda = 828.4) on the data:
+
+```{r}
+best_model <- ridgereg(crim ~ zn + indus + chas + nox + rm + age + dis + rad + tax + ptratio + b + lstat + medv, data = as.data.frame(BostonHousing), lambda = 828.4)
+print(best_model)
+qqnorm(best_model$res)
+qqline(best_model$res)
+plot(best_model$res, type="o", pch=20, cex=0.5)
+```
+
+But the residuals of the best ridgereg model aren't very good.
