@@ -4,8 +4,8 @@
 \name{Lab7}
 \alias{Lab7}
 \alias{Lab7-package}
-\title{Linear regression package}
+\title{Linear regression and Rigde regression package}
 \description{
-A package containing a linear regression function, a linear regression class and some methods for that class.
+A package containing both linear and ridge regression functions, linear and ridge regression classes and some methods for these classes.
 }
 

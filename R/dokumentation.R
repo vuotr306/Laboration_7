@@ -14,9 +14,9 @@
 #' @export
 "linreg"
 
-#' Linear regression package
+#' Linear regression and Rigde regression package
 #'
-#' A package containing a linear regression function, a linear regression class and some methods for that class.
+#' A package containing both linear and ridge regression functions, linear and ridge regression classes and some methods for these classes.
 #' @docType package
 #' @name Lab7
 NULL
@@ -128,13 +128,14 @@ NULL
 #'
 #' This is our own created ridge regression function
 #'
-#' Longer description
+#' This is a linear regression with one extra shrinkage parameter(lambda).
+#' Note that the data should be normalized before using this function. 
 #' @param formula A formula on the form response~first_predictor + second_predictor + ... . The response variable and all predictors must be in the data set provided.
 #' @param data The data set from which to choose the predictors and the response variable in the formula.
-#' @param lambda The value of lambda
+#' @param lambda The value of lambda, lambda = 0 as default which is equals to OLS.
 #' @examples
 #' ridgereg(Petal.Length~Sepal.Width+Sepal.Length, data=iris, lambda=10)
-#' @return An object of S3-type class "ridgereg": A list of ?? elements, including fitted values and residuals.
+#' @return An object of S3-type class "ridgereg": A list of nine elements, including fitted values and residuals.
 #' @seealso
 #' The methods that use the ridgereg class: \link{print.ridgereg}, \link{coef.ridgereg} and \link{predict.ridgereg}.
 #' @export

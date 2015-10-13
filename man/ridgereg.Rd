@@ -11,16 +11,17 @@ ridgereg(formula, data, lambda = 0)
 
 \item{data}{The data set from which to choose the predictors and the response variable in the formula.}
 
-\item{lambda}{The value of lambda}
+\item{lambda}{The value of lambda, lambda = 0 as default which is equals to OLS.}
 }
 \value{
-An object of S3-type class "ridgereg": A list of ?? elements, including fitted values and residuals.
+An object of S3-type class "ridgereg": A list of nine elements, including fitted values and residuals.
 }
 \description{
 This is our own created ridge regression function
 }
 \details{
-Longer description
+This is a linear regression with one extra shrinkage parameter(lambda).
+Note that the data should be normalized before using this function.
 }
 \examples{
 ridgereg(Petal.Length~Sepal.Width+Sepal.Length, data=iris, lambda=10)
