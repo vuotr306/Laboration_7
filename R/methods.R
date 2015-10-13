@@ -109,11 +109,11 @@ predict.linreg <- function(x){
 
 print.ridgereg <- function(x){
 
-  temp <- rownames(x$B_ridge_hat)
-  B_ridge_hat <- as.vector(x$B_ridge_hat)
-  names(B_ridge_hat) <- temp
+  temp <- rownames(x$B_QR)
+  B_QR <- as.vector(x$B_QR)
+  names(B_QR) <- temp
 
-  lista <- list(Call=x$formula, Coefficients=B_ridge_hat)
+  lista <- list(Call=x$formula, Coefficients=B_QR)
 
   return(lista)
 }
@@ -121,11 +121,11 @@ print.ridgereg <- function(x){
 
 coef.ridgereg<-function(x){
 
-  temp <- rownames(x$B_ridge_hat)
-  B_ridge_hat <- as.vector(x$B_ridge_hat)
-  names(B_ridge_hat) <- temp
+  temp <- rownames(x$B_QR)
+  B_QR <- as.vector(x$B_QR)
+  names(B_QR) <- temp
 
-  return(B_ridge_hat)
+  return(B_QR)
 
 }
 
@@ -142,7 +142,7 @@ predict.ridgereg <- function(x, x_values = "default"){
     # stopifnot(nrow(x_values) == x$n)
     stopifnot(ncol(x_values) == x$p - 1)
     X <- as.matrix(cbind(1, x_values))
-    y_hat <- X %*% x$B_ridge_hat
+    y_hat <- X %*% x$B_QR
     return(y_hat)
   }
 

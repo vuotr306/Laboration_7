@@ -1,7 +1,7 @@
 Package: Lab7
 Type: Package
 Title: Multiple linear regression and ridge regression
-Version: 0.1.0
+Version: 1.0.0
 Date: 2015-10-07
 Author: c(
  person("Vuong", "Tran", email="vuotr306@student.liu.se", role="aut"),

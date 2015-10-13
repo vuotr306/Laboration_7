@@ -66,16 +66,12 @@ fsFit
 ```
 
 ## 3
-Evaluate lm and lm+forwsel...
+When comparing our two different methods lm and leapFoward, the result show that using only seven predictor is better than using all 13 of them with respect to the RMSE value. We can't compare the Rsquared values since lm and leapFowards methods give us two different best models with different amount of predictors.
 
+## 4-5
 
-
-
-## 4
-
-We try the caret train function with our function ridgereg as methods with lambda, variating from 0 to 100 and noticed the best values was when lambda was equal to 16.36.
+We try the caret train function with our function ridgereg as methods with lambda, variating from 0 to 100 and see that the best values are when lambda is around 14-18. We made a new run, with focus on these values and noticed that the best values was when lambda was equal to 16.36.
 The differences can be seen down here:
-  
   
 ```{r}
 
@@ -145,22 +141,9 @@ rrFit1 <- caret::train(crim ~ ., data = training,
                        trControl = fitControl
 )
 rrFit1
-
-
-# a <- rrFit1$finalModel
-# a$tuneValue
-# 
-# 
-# plot(RMSE~lambda, data=rrFit1$results, type="o")
-# 
-# which_best <- tolerance(rrFit1$results, metric="RMSE",
-#           tol=0.0000001, maximize = F)
-# 
-# rrFit1$results[which_best, ]
 ```
 
+## 6
 When our tuning parameter lambda is zero, ridge regression is equal to OLS and as we can see, the Root Mean Squared Error is much lower for the best tuning value.
+We can't compare the RMSE between the ridge regression and the forward selection methods. Since regular lm and leapForward methods produced almost the same RMSE value our conclusion is that our Rigdgereg with best tuning paramether (lambda = 16.36) is also better than the best model from the leapForward method (linear regression with seven explanatory variables).
 
-
-> "Insert quote here."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))

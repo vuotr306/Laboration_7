@@ -1,31 +1,31 @@
-
 visualize_airport_delays<-function(){
   # def: A delay is the arr_delay and the airport that accounts for the delay is the destination airport. 
-  data("airports")
-  data("flights") 
+  airports <- nycflights13::airports
+  flights <- nycflights13::flights
   
-  flights_r<-select(flights,dep_delay,flight,dest)
-  airports_r<-select(airports,faa,lat,lon)
+  flights_r<-dplyr::select(flights,dep_delay,flight,dest)
+  airports_r<-dplyr::select(airports,faa,lat,lon)
   # rm(airports, flights)
-  airports_r<-rename(airports_r,dest=faa)
+  airports_r<-dplyr::rename(airports_r, dest=faa)
   
-  Db<-left_join( flights_r,airports_r, "dest")
+  Db<-dplyr::left_join( flights_r,airports_r, "dest")
   rm(airports_r, flights_r)
-  Db<-select(Db,-(2))
+  Db<-dplyr::select(Db,-(2))
   
-  f <- function(x) {
+  reset_early_arrivals <- function(x) {
     x[x<0]<-0
     return(x)
   }
   
-  Db<-mutate(Db,newDelay=f(dep_delay))
-  Db<-select(Db,-dep_delay)
+  Db<-dplyr::mutate(Db,newDelay=reset_early_arrivals(dep_delay))
+  Db<-dplyr::select(Db,-dep_delay)
   
-  avgDelays <- Db %>% group_by(dest) %>% summarise(avg=mean(newDelay, na.rm = TRUE))
+  # avgDelays <- Db %>% group_by(dest) %>% dplyr::summarise(avg=mean(newDelay, na.rm = TRUE))
+  avgDelays <- dplyr::summarise(dplyr::group_by(Db, dest),  avg=mean(newDelay, na.rm = TRUE))
   
-  Final <- left_join(avgDelays, Db, "dest")
-  Final <- select(Final, -c(1,5))
-  Final <- distinct(Final)
+  Final <- dplyr::left_join(avgDelays, Db, "dest")
+  Final <- dplyr::select(Final, -c(1,5))
+  Final <- dplyr::distinct(Final)
   Final<-as.data.frame(Final)
   
   p1<-ggplot2::ggplot(data=Final) + ggplot2::aes(x=lon,y=lat,size=avg) +

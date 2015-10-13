@@ -1,4 +1,4 @@
 library(testthat)
-library(Lab4)
+library(Lab7)
 
-test_check("Lab4")
+test_check("Lab7")

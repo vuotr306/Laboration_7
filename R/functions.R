@@ -59,7 +59,7 @@ ridgereg <- function(formula, data, lambda = 0){
   Q <- qr.Q(QR)
   R <- qr.R(QR)
   B_QR<- qr.solve(R) %*% t(Q) %*% as.matrix(y_new)
-  dimnames(B_QR) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
+  if(p==2) dimnames(B_QR) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
   
   Y_hat <- X %*% B_QR
   res <- as.matrix(y - Y_hat, ncol = 1)
