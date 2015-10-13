@@ -50,28 +50,29 @@ ridgereg <- function(formula, data, lambda = 0){
   X <- cbind(1, scale(X[,-1]))
   y<-as.matrix(data[all.vars(formula)[1]],ncol=1)
   p <- ncol(X)
+#   B_ridge_hat <- solve(t(X) %*% X + lambda * diag(p) ) %*% t(X) %*% as.matrix(y)
+#   dimnames(B_ridge_hat) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
 
-  B_ridge_hat <- solve(t(X) %*% X + lambda * diag(p) ) %*% t(X) %*% as.matrix(y)
-  QR <- qr((X))
+  X_new<-rbind(X,sqrt(lambda)*diag(p))
+  y_new<-rbind(y,matrix(data = 0, nrow = p, ncol = 1))
+  QR <- qr((X_new))
   Q <- qr.Q(QR)
-  R<- qr.R(QR)
-  B_QR<- qr.solve(R+ lambda * diag(p) ) %*% t(Q) %*% as.matrix(y)
-  
-  dimnames(B_ridge_hat) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
+  R <- qr.R(QR)
+  B_QR<- qr.solve(R) %*% t(Q) %*% as.matrix(y_new)
   dimnames(B_QR) <- list(c("(Intercept)", all.vars(formula)[-1]), NULL)
-  Y_hat <- X %*% B_ridge_hat
+  
+  Y_hat <- X %*% B_QR
   res <- as.matrix(y - Y_hat, ncol = 1)
   n<-nrow(X)
   p<-ncol(X)
 
-  ridgereg_list <- list(formula = formula, data=data, X=X, y=y, B_ridge_hat = B_ridge_hat,B_QR=B_QR, y_hat = Y_hat, res = res, n=n, p=p)
+  ridgereg_list <- list(formula = formula, data=data, X=X, y=y, B_QR=B_QR, y_hat = Y_hat, res = res, n=n, p=p)
   ridgereg_object <- structure(ridgereg_list, class="ridgereg")
 
   return(ridgereg_object)
 
 
 }
-
 
 
 

@@ -18,13 +18,11 @@ fitControl <- caret::trainControl(## 10-fold CV
   ## repeated ten times
   repeats = 10)
 
-
 ## ------------------------------------------------------------------------
 lmFit <- caret::train(crim ~ ., data = training,
-                 method = "lm",
-                 trControl = fitControl
-
-                 )
+                      method = "lm",
+                      trControl = fitControl
+)
 lmFit
 
 
@@ -32,10 +30,10 @@ lmFit
 ## ------------------------------------------------------------------------
 lmGrid <-  expand.grid(nvmax=1:(ncol(training)-1))
 fsFit <- caret::train(crim ~ ., data = training,
-                 method = "leapForward",
-                 trControl = fitControl,
-                  tuneGrid=lmGrid
-                 )
+                      method = "leapForward",
+                      trControl = fitControl,
+                      tuneGrid=lmGrid
+)
 
 fsFit
 

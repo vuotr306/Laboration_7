@@ -70,7 +70,7 @@ test_that("function returns correct results from specific data.", {
   expect_is(testobject1, class = "ridgereg")
   expect_true(is.list(testobject1))
   # expect_equal(length(testobject1), 15)
-  expect_equal(as.vector(unname(testobject1$B_ridge_hat)), as.vector(unname(controlobject1$coefficients)))
+  expect_equal(as.vector(unname(testobject1$B_QR)), as.vector(unname(controlobject1$coefficients)))
   expect_equal(as.vector(unname(testobject1$y_hat)), unname(controlobject1$fitted.values))
   expect_equal(as.vector(unname(testobject1$res)), unname(controlobject1$residuals))
 })
